@@ -2,6 +2,7 @@ package com.megumi.core.base;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * 基类
@@ -10,44 +11,44 @@ import java.time.LocalDateTime;
  */
 public class BaseEntity implements Serializable {
 
-    private Long id;
+    private Integer id;
 
-    private Long version;
+    private Integer version;
 
-    private LocalDateTime createTime;
+    private Date createDateTime;
 
-    private LocalDateTime lastUpdateTime;
+    private Date lastUpdateDateTime;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Long getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(Long version) {
+    public void setVersion(Integer version) {
         this.version = version;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
+    public Date getCreateDateTime() {
+        return createDateTime;
     }
 
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
+    public void setCreateDateTime(Date createDateTime) {
+        this.createDateTime = createDateTime;
     }
 
-    public LocalDateTime getLastUpdateTime() {
-        return lastUpdateTime;
+    public Date getLastUpdateDateTime() {
+        return lastUpdateDateTime;
     }
 
-    public void setLastUpdateTime(LocalDateTime lastUpdateTime) {
-        this.lastUpdateTime = lastUpdateTime;
+    public void setLastUpdateDateTime(Date lastUpdateDateTime) {
+        this.lastUpdateDateTime = lastUpdateDateTime;
     }
 
     @Override
@@ -55,8 +56,8 @@ public class BaseEntity implements Serializable {
         return "BaseEntity{" +
                 "id=" + id +
                 ", version=" + version +
-                ", createTime=" + createTime +
-                ", lastUpdateTime=" + lastUpdateTime +
+                ", createDateTime=" + createDateTime +
+                ", lastUpdateDateTime=" + lastUpdateDateTime +
                 '}';
     }
 }

@@ -40,7 +40,7 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 	}
 
 	@Override
-	public int deleteByPrimaryKey(Long id) {
+	public int deleteByPrimaryKey(Integer id) {
 		try {
 			Method deleteByPrimaryKey = mapper.getClass().getDeclaredMethod("deleteByPrimaryKey", id.getClass());
 			Object result = deleteByPrimaryKey.invoke(mapper, id);
@@ -123,7 +123,7 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 	}
 
 	@Override
-	public Record selectByPrimaryKey(Long id) {
+	public Record selectByPrimaryKey(Integer id) {
 		try {
 			Method selectByPrimaryKey = mapper.getClass().getDeclaredMethod("selectByPrimaryKey", id.getClass());
 			Object result = selectByPrimaryKey.invoke(mapper, id);
@@ -144,6 +144,7 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 		BaseGeneratedCriteria baseGeneratedCriteria = example.createCriteria();
 		baseGeneratedCriteria.andIdEqualTo(record.getId());
 		baseGeneratedCriteria.andVersionEqualTo(record.getVersion());
+		record.setVersion(record.getVersion()+1);
 		return updateByExampleSelective(record, example);
 	}
 

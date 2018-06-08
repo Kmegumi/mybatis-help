@@ -30,7 +30,7 @@ public interface BaseService<Record extends BaseEntity, Example extends BaseExam
      * @param id
      * @return
      */
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(Integer id);
 
     /**
      * 插入记录
@@ -79,7 +79,7 @@ public interface BaseService<Record extends BaseEntity, Example extends BaseExam
      * @param id
      * @return
      */
-    Record selectByPrimaryKey(Long id);
+    Record selectByPrimaryKey(Integer id);
 
     /**
      *

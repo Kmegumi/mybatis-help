@@ -7,7 +7,7 @@ package com.megumi.core.base;
  */
 public interface BaseGeneratedCriteria<T extends BaseGeneratedCriteria> {
 
-    T andIdEqualTo(Long value);
+    T andIdEqualTo(Integer value);
 
-    T andVersionEqualTo(Long value);
+    T andVersionEqualTo(Integer value);
 }
