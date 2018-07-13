@@ -15,9 +15,9 @@ public class BaseEntity implements Serializable {
 
     private Integer version;
 
-    private Date createDateTime;
+    private Date createDatetime;
 
-    private Date lastUpdateDateTime;
+    private Date lastUpdateDatetime;
 
     public Integer getId() {
         return id;
@@ -35,29 +35,19 @@ public class BaseEntity implements Serializable {
         this.version = version;
     }
 
-    public Date getCreateDateTime() {
-        return createDateTime;
+    public Date getCreateDatetime() {
+        return createDatetime;
     }
 
-    public void setCreateDateTime(Date createDateTime) {
-        this.createDateTime = createDateTime;
+    public void setCreateDatetime(Date createDatetime) {
+        this.createDatetime = createDatetime;
     }
 
-    public Date getLastUpdateDateTime() {
-        return lastUpdateDateTime;
+    public Date getLastUpdateDatetime() {
+        return lastUpdateDatetime;
     }
 
-    public void setLastUpdateDateTime(Date lastUpdateDateTime) {
-        this.lastUpdateDateTime = lastUpdateDateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "BaseEntity{" +
-                "id=" + id +
-                ", version=" + version +
-                ", createDateTime=" + createDateTime +
-                ", lastUpdateDateTime=" + lastUpdateDateTime +
-                '}';
+    public void setLastUpdateDatetime(Date lastUpdateDatetime) {
+        this.lastUpdateDatetime = lastUpdateDatetime;
     }
 }

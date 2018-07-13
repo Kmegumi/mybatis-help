@@ -1,10 +1,14 @@
 package com.megumi.core.base;
 
 import com.megumi.core.exception.DAOException;
+import com.megumi.core.exception.LockException;
 import org.apache.ibatis.annotations.Param;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,6 +17,8 @@ import java.util.List;
  * @date 2018/06/06.
  */
 public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends BaseExample> implements BaseService<Record, Example> {
+
+	private static final Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
 
 	@Autowired
 	protected Mapper mapper;
@@ -52,6 +58,11 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 
 	@Override
 	public int insert(Record record) {
+		record.setId(null);
+		record.setVersion(0);
+		Date now = new Date();
+		record.setCreateDatetime(now);
+		record.setLastUpdateDatetime(now);
 		try {
 			Method insert = mapper.getClass().getDeclaredMethod("insert", record.getClass());
 			Object result = insert.invoke(mapper, record);
@@ -63,6 +74,11 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 
 	@Override
 	public int insertSelective(Record record) {
+		record.setId(null);
+		record.setVersion(0);
+		Date now = new Date();
+		record.setCreateDatetime(now);
+		record.setLastUpdateDatetime(now);
 		try {
 			Method insertSelective = mapper.getClass().getDeclaredMethod("insertSelective", record.getClass());
 			Object result = insertSelective.invoke(mapper, record);
@@ -135,6 +151,13 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 
 	@Override
 	public int updateByPrimaryKeyAndVersion(Record record, Class<Example> exampleClass) {
+		if (record.getId() == null) {
+			throw new DAOException("缺少id");
+		}
+		if (record.getVersion() == null) {
+			throw new DAOException("缺少版本信息");
+		}
+		record.setLastUpdateDatetime(new Date());
 		Example example = null;
 		try {
 			example = exampleClass.newInstance();
@@ -145,11 +168,16 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 		baseGeneratedCriteria.andIdEqualTo(record.getId());
 		baseGeneratedCriteria.andVersionEqualTo(record.getVersion());
 		record.setVersion(record.getVersion()+1);
-		return updateByExampleSelective(record, example);
+		int result = updateByExampleSelective(record, example);
+		if (result == 0) {
+			throw new LockException("version or id err");
+		}
+		return result;
 	}
 
 	@Override
 	public int updateByExampleSelective(@Param("record") Record record, @Param("example") Example example) {
+		record.setLastUpdateDatetime(new Date());
 		try {
 			Method updateByExampleSelective = mapper.getClass().getDeclaredMethod("updateByExampleSelective", record.getClass(), example.getClass());
 			Object result = updateByExampleSelective.invoke(mapper, record, example);
@@ -161,6 +189,7 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 
 	@Override
 	public int updateByExampleWithBLOBs(@Param("record") Record record, @Param("example") Example example) {
+		record.setLastUpdateDatetime(new Date());
 		try {
 			Method updateByExampleWithBLOBs = mapper.getClass().getDeclaredMethod("updateByExampleWithBLOBs", record.getClass(), example.getClass());
 			Object result = updateByExampleWithBLOBs.invoke(mapper, record, example);
@@ -172,6 +201,7 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 
 	@Override
 	public int updateByExample(@Param("record") Record record, @Param("example") Example example) {
+		record.setLastUpdateDatetime(new Date());
 		try {
 			Method updateByExample = mapper.getClass().getDeclaredMethod("updateByExample", record.getClass(), example.getClass());
 			Object result = updateByExample.invoke(mapper, record, example);
@@ -183,6 +213,10 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 
 	@Override
 	public int updateByPrimaryKeySelective(Record record) {
+		if (record.getId() == null) {
+			throw new DAOException("缺少id");
+		}
+		record.setLastUpdateDatetime(new Date());
 		try {
 			Method updateByPrimaryKeySelective = mapper.getClass().getDeclaredMethod("updateByPrimaryKeySelective", record.getClass());
 			Object result = updateByPrimaryKeySelective.invoke(mapper, record);
@@ -194,6 +228,10 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 
 	@Override
 	public int updateByPrimaryKeyWithBLOBs(Record record) {
+		if (record.getId() == null) {
+			throw new DAOException("缺少id");
+		}
+		record.setLastUpdateDatetime(new Date());
 		try {
 			Method updateByPrimaryKeyWithBLOBs = mapper.getClass().getDeclaredMethod("updateByPrimaryKeyWithBLOBs", record.getClass());
 			Object result = updateByPrimaryKeyWithBLOBs.invoke(mapper, record);
@@ -205,6 +243,10 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 
 	@Override
 	public int updateByPrimaryKey(Record record) {
+		if (record.getId() == null) {
+			throw new DAOException("缺少id");
+		}
+		record.setLastUpdateDatetime(new Date());
 		try {
 			Method updateByPrimaryKey = mapper.getClass().getDeclaredMethod("updateByPrimaryKey", record.getClass());
 			Object result = updateByPrimaryKey.invoke(mapper, record);
