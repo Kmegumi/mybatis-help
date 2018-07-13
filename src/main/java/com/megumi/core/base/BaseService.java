@@ -47,13 +47,6 @@ public interface BaseService<Record extends BaseEntity, Example extends BaseExam
     int insertSelective(Record record);
 
     /**
-     * 根据条件查询记录，附带BLOB字段
-     * @param example
-     * @return
-     */
-    List<Record> selectByExampleWithBLOBs(Example example);
-
-    /**
      * 根据条件查询记录
      * @param example
      * @return
@@ -66,13 +59,6 @@ public interface BaseService<Record extends BaseEntity, Example extends BaseExam
      * @return
      */
     Record selectFirstByExample(Example example);
-
-    /**
-     * 根据条件查询第一条记录，附带BLOB字段
-     * @param example
-     * @return
-     */
-    Record selectFirstByExampleWithBLOBs(Example example);
 
     /**
      * 根据主键查询记录
@@ -95,14 +81,6 @@ public interface BaseService<Record extends BaseEntity, Example extends BaseExam
     int updateByExampleSelective(@Param("record") Record record, @Param("example") Example example);
 
     /**
-     * 根据条件更新记录有效字段，附带BLOB字段
-     * @param record
-     * @param example
-     * @return
-     */
-    int updateByExampleWithBLOBs(@Param("record") Record record, @Param("example") Example example);
-
-    /**
      * 根据条件更新记录
      * @param record
      * @param example
@@ -116,13 +94,6 @@ public interface BaseService<Record extends BaseEntity, Example extends BaseExam
      * @return
      */
     int updateByPrimaryKeySelective(Record record);
-
-    /**
-     * 根据主键更新记录，附带BLOB字段
-     * @param record
-     * @return
-     */
-    int updateByPrimaryKeyWithBLOBs(Record record);
 
     /**
      * 根据主键更新记录

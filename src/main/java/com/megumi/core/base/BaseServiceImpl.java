@@ -73,17 +73,6 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 	}
 
 	@Override
-	public List<Record> selectByExampleWithBLOBs(Example example) {
-		try {
-			Method selectByExampleWithBLOBs = mapper.getClass().getDeclaredMethod("selectByExampleWithBLOBs", example.getClass());
-			Object result = selectByExampleWithBLOBs.invoke(mapper, example);
-			return (List<Record>) result;
-		} catch (Exception e) {
-			throw new DAOException(e);
-		}
-	}
-
-	@Override
 	public List<Record> selectByExample(Example example) {
 		try {
 			Method selectByExample = mapper.getClass().getDeclaredMethod("selectByExample", example.getClass());
@@ -99,20 +88,6 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 		try {
 			Method selectByExample = mapper.getClass().getDeclaredMethod("selectByExample", example.getClass());
 			List<Record> result = (List<Record>) selectByExample.invoke(mapper, example);
-			if (null != result && result.size() > 0) {
-				return result.get(0);
-			}
-			return null;
-		} catch (Exception e) {
-			throw new DAOException(e);
-		}
-	}
-
-	@Override
-	public Record selectFirstByExampleWithBLOBs(Example example) {
-		try {
-			Method selectByExampleWithBLOBs = mapper.getClass().getDeclaredMethod("selectByExampleWithBLOBs", example.getClass());
-			List<Record> result = (List<Record>) selectByExampleWithBLOBs.invoke(mapper, example);
 			if (null != result && result.size() > 0) {
 				return result.get(0);
 			}
@@ -159,17 +134,6 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 	}
 
 	@Override
-	public int updateByExampleWithBLOBs(@Param("record") Record record, @Param("example") Example example) {
-		try {
-			Method updateByExampleWithBLOBs = mapper.getClass().getDeclaredMethod("updateByExampleWithBLOBs", record.getClass(), example.getClass());
-			Object result = updateByExampleWithBLOBs.invoke(mapper, record, example);
-			return (int)result;
-		} catch (Exception e) {
-			throw new DAOException(e);
-		}
-	}
-
-	@Override
 	public int updateByExample(@Param("record") Record record, @Param("example") Example example) {
 		try {
 			Method updateByExample = mapper.getClass().getDeclaredMethod("updateByExample", record.getClass(), example.getClass());
@@ -185,17 +149,6 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 		try {
 			Method updateByPrimaryKeySelective = mapper.getClass().getDeclaredMethod("updateByPrimaryKeySelective", record.getClass());
 			Object result = updateByPrimaryKeySelective.invoke(mapper, record);
-			return (int)result;
-		} catch (Exception e) {
-			throw new DAOException(e);
-		}
-	}
-
-	@Override
-	public int updateByPrimaryKeyWithBLOBs(Record record) {
-		try {
-			Method updateByPrimaryKeyWithBLOBs = mapper.getClass().getDeclaredMethod("updateByPrimaryKeyWithBLOBs", record.getClass());
-			Object result = updateByPrimaryKeyWithBLOBs.invoke(mapper, record);
 			return (int)result;
 		} catch (Exception e) {
 			throw new DAOException(e);
