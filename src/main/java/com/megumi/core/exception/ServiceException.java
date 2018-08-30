@@ -8,12 +8,19 @@ package com.megumi.core.exception;
  */
 public class ServiceException extends RuntimeException  {
 
+    private Object object;
+
     public ServiceException() {
         super();
     }
 
     public ServiceException(String message) {
         super(message);
+    }
+
+    public ServiceException(Object object) {
+        super();
+        this.object = object;
     }
 
     public ServiceException(String message, Throwable cause) {
@@ -24,4 +31,11 @@ public class ServiceException extends RuntimeException  {
         super(cause);
     }
 
+    public Object getObject() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
+    }
 }

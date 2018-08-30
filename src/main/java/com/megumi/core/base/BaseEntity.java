@@ -50,4 +50,14 @@ public class BaseEntity implements Serializable {
     public void setLastUpdateDatetime(Date lastUpdateDatetime) {
         this.lastUpdateDatetime = lastUpdateDatetime;
     }
+
+    @Override
+    public String toString() {
+        return "BaseEntity{" +
+                "id=" + id +
+                ", version=" + version +
+                ", createDatetime=" + createDatetime +
+                ", lastUpdateDatetime=" + lastUpdateDatetime +
+                '}';
+    }
 }

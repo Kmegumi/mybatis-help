@@ -28,6 +28,8 @@ public class DateUtils {
 
     private final static DateTimeFormatter ORDER_FORMAT = DateTimeFormatter.ofPattern("yyMMdd");
 
+    private final static DateTimeFormatter FORMAT_DAY = DateTimeFormatter.ofPattern("yyyyMMdd");
+
     private DateUtils(){
 
     }
@@ -40,6 +42,21 @@ public class DateUtils {
 
     /****↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓格式化时间字符串方法↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓***/
 
+    /**
+     * 获取今天的时间
+     * @return
+     * */
+    public static String getFormatDay() {
+        return getFormatDay(LocalDate.now());
+    }
+
+    /**
+     * 获取日期
+     * @return
+     * */
+    public static String getFormatDay(LocalDate localDate) {
+        return FORMAT_DAY.format(localDate);
+    }
 
 
 
