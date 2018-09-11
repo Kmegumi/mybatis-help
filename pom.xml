@@ -66,21 +66,21 @@
         </dependency>
     </dependencies>
 
-    <distributionManagement>
+    <!--<distributionManagement>
         <repository>
-            <!-- 这里的ID要和setting的id一致 -->
+            &lt;!&ndash; 这里的ID要和setting的id一致 &ndash;&gt;
             <id>maven-repository-releases</id>
             <url>http://10.10.1.197:12121/repository/ky/</url>
         </repository>
-        <!--这是打成快照版本的配置，如果不用这个snapshotRepository标签，打包失败，会报权限问题 -->
+        &lt;!&ndash;这是打成快照版本的配置，如果不用这个snapshotRepository标签，打包失败，会报权限问题 &ndash;&gt;
         <snapshotRepository>
             <id>maven-repository-snapshots</id>
             <url>http://10.10.1.197:12121/repository/ky_snapshot/</url>
         </snapshotRepository>
-    </distributionManagement>
+    </distributionManagement>-->
 
     <repositories>
-        <!--中央代理库-->
+        <!--&lt;!&ndash;中央代理库&ndash;&gt;
         <repository>
             <id>maven-repository-central</id>
             <name>central repository</name>
@@ -89,7 +89,7 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-        <!--二方库-->
+        &lt;!&ndash;二方库&ndash;&gt;
         <repository>
             <id>maven-repository-releases</id>
             <name>2nd repository</name>
@@ -98,7 +98,7 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-        <!--二方库快照-->
+        &lt;!&ndash;二方库快照&ndash;&gt;
         <repository>
             <id>maven-repository-releases-snapshot</id>
             <name>2nd repository snapshot</name>
@@ -106,6 +106,6 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>
+        </repository>-->
     </repositories>
 </project>

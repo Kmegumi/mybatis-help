@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends BaseExample> implements BaseService<Record, Example> {
 
-	private static final Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	protected Mapper mapper;
@@ -70,6 +70,30 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
+	}
+
+	/**
+	 * 插入记录
+	 *
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public boolean insertWithCatch(Record record) {
+		record.setId(null);
+		record.setVersion(0);
+		Date now = new Date();
+		record.setCreateDatetime(now);
+		record.setLastUpdateDatetime(now);
+		try {
+			Method insert = mapper.getClass().getDeclaredMethod("insert", record.getClass());
+			if ((int)insert.invoke(mapper, record) == 1) {
+				return true;
+			}
+		} catch (Exception e) {
+			logger.error(record.toString() + "_" + e.getMessage(), e);
+		}
+		return false;
 	}
 
 	@Override
@@ -147,6 +171,24 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
+	}
+
+	/**
+	 * 根据主键查询记录
+	 *
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public Record selectByPrimaryKeyWithCatch(Integer id) {
+		try {
+			Method selectByPrimaryKey = mapper.getClass().getDeclaredMethod("selectByPrimaryKey", id.getClass());
+			Object result = selectByPrimaryKey.invoke(mapper, id);
+			return (Record) result;
+		} catch (Exception e) {
+			logger.error("id_"+ id+"_"+e.getMessage(), e);
+		}
+		return null;
 	}
 
 	@Override

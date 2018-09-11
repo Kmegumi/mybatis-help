@@ -40,6 +40,13 @@ public interface BaseService<Record extends BaseEntity, Example extends BaseExam
     int insert(Record record);
 
     /**
+     * 插入记录
+     * @param record
+     * @return
+     */
+    boolean insertWithCatch(Record record);
+
+    /**
      * 插入记录有效字段
      * @param record
      * @return
@@ -80,6 +87,13 @@ public interface BaseService<Record extends BaseEntity, Example extends BaseExam
      * @return
      */
     Record selectByPrimaryKey(Integer id);
+
+    /**
+     * 根据主键查询记录
+     * @param id
+     * @return
+     */
+    Record selectByPrimaryKeyWithCatch(Integer id);
 
     /**
      *
