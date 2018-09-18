@@ -1,14 +1,11 @@
 package com.megumi.core.base;
 
 import com.megumi.core.exception.DAOException;
-import com.megumi.core.exception.LockException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 
-import java.lang.reflect.Method;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,57 +13,61 @@ import java.util.List;
  * @author megumi
  * @date 2018/06/06.
  */
-public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends BaseExample> implements BaseService<Record, Example> {
-
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+@Slf4j
+public class BaseServiceImpl<Mapper, Record, Example> implements BaseService<Record, Example> {
 
 	@Autowired
 	protected Mapper mapper;
 
+	/**
+	 * 根据条件查询记录数量
+	 *
+	 * @param example
+	 * @return
+	 */
 	@Override
 	public long countByExample(Example example) {
+		Assert.notNull(example, "条件对象为空");
 		try {
-			Method countByExample = mapper.getClass().getDeclaredMethod("countByExample", example.getClass());
-			Object result = countByExample.invoke(mapper, example);
-			return (long)result;
+			return (long) mapper.getClass()
+					.getDeclaredMethod("countByExample", example.getClass())
+					.invoke(mapper, example);
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
 	}
 
+	/**
+	 * 根据条件删除记录
+	 *
+	 * @param example
+	 * @return
+	 */
 	@Override
 	public int deleteByExample(Example example) {
+		Assert.notNull(example, "条件对象为空");
 		try {
-			Method deleteByExample = mapper.getClass().getDeclaredMethod("deleteByExample", example.getClass());
-			Object result = deleteByExample.invoke(mapper, example);
-			return (int)result;
+			return (int)mapper.getClass()
+					.getDeclaredMethod("deleteByExample", example.getClass())
+					.invoke(mapper, example);
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
 	}
 
+	/**
+	 * 根据主键删除记录
+	 *
+	 * @param id
+	 * @return
+	 */
 	@Override
 	public int deleteByPrimaryKey(Integer id) {
+		Assert.notNull(id, "条件对象为空");
 		try {
-			Method deleteByPrimaryKey = mapper.getClass().getDeclaredMethod("deleteByPrimaryKey", id.getClass());
-			Object result = deleteByPrimaryKey.invoke(mapper, id);
-			return (int)result;
-		} catch (Exception e) {
-			throw new DAOException(e);
-		}
-	}
-
-	@Override
-	public int insert(Record record) {
-		record.setId(null);
-		record.setVersion(0);
-		Date now = new Date();
-		record.setCreateDatetime(now);
-		record.setLastUpdateDatetime(now);
-		try {
-			Method insert = mapper.getClass().getDeclaredMethod("insert", record.getClass());
-			Object result = insert.invoke(mapper, record);
-			return (int)result;
+			return (int)mapper.getClass()
+					.getDeclaredMethod("deleteByPrimaryKey", id.getClass())
+					.invoke(mapper, id);
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
@@ -79,95 +80,49 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 	 * @return
 	 */
 	@Override
-	public boolean insertWithCatch(Record record) {
-		record.setId(null);
-		record.setVersion(0);
-		Date now = new Date();
-		record.setCreateDatetime(now);
-		record.setLastUpdateDatetime(now);
+	public int insert(Record record) {
+		Assert.notNull(record, "对象为空");
 		try {
-			Method insert = mapper.getClass().getDeclaredMethod("insert", record.getClass());
-			if ((int)insert.invoke(mapper, record) == 1) {
-				return true;
-			}
+			return (int)mapper.getClass()
+					.getDeclaredMethod("insert", record.getClass())
+					.invoke(mapper, record);
 		} catch (Exception e) {
-			logger.error(record.toString() + "_" + e.getMessage(), e);
+			throw new DAOException(e);
 		}
-		return false;
 	}
 
+	/**
+	 * 插入记录有效字段
+	 *
+	 * @param record
+	 * @return
+	 */
 	@Override
 	public int insertSelective(Record record) {
-		record.setId(null);
-		record.setVersion(0);
-		Date now = new Date();
-		record.setCreateDatetime(now);
-		record.setLastUpdateDatetime(now);
+		Assert.notNull(record, "对象为空");
 		try {
-			Method insertSelective = mapper.getClass().getDeclaredMethod("insertSelective", record.getClass());
-			Object result = insertSelective.invoke(mapper, record);
-			return (int)result;
+			return (int)mapper.getClass()
+					.getDeclaredMethod("insertSelective", record.getClass())
+					.invoke(mapper, record);
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
 	}
 
+	/**
+	 * 根据条件查询记录
+	 *
+	 * @param example
+	 * @return
+	 */
 	@Override
-	public List<Record> selectByExampleWithBLOBs(Example example) {
-		try {
-			Method selectByExampleWithBLOBs = mapper.getClass().getDeclaredMethod("selectByExampleWithBLOBs", example.getClass());
-			Object result = selectByExampleWithBLOBs.invoke(mapper, example);
-			return (List<Record>) result;
-		} catch (Exception e) {
-			throw new DAOException(e);
-		}
-	}
-
-	@Override
+	@SuppressWarnings("unchecked")
 	public List<Record> selectByExample(Example example) {
+		Assert.notNull(example, "条件对象为空");
 		try {
-			Method selectByExample = mapper.getClass().getDeclaredMethod("selectByExample", example.getClass());
-			Object result = selectByExample.invoke(mapper, example);
-			return (List<Record>) result;
-		} catch (Exception e) {
-			throw new DAOException(e);
-		}
-	}
-
-	@Override
-	public Record selectFirstByExample(Example example) {
-		try {
-			Method selectByExample = mapper.getClass().getDeclaredMethod("selectByExample", example.getClass());
-			List<Record> result = (List<Record>) selectByExample.invoke(mapper, example);
-			if (null != result && result.size() > 0) {
-				return result.get(0);
-			}
-			return null;
-		} catch (Exception e) {
-			throw new DAOException(e);
-		}
-	}
-
-	@Override
-	public Record selectFirstByExampleWithBLOBs(Example example) {
-		try {
-			Method selectByExampleWithBLOBs = mapper.getClass().getDeclaredMethod("selectByExampleWithBLOBs", example.getClass());
-			List<Record> result = (List<Record>) selectByExampleWithBLOBs.invoke(mapper, example);
-			if (null != result && result.size() > 0) {
-				return result.get(0);
-			}
-			return null;
-		} catch (Exception e) {
-			throw new DAOException(e);
-		}
-	}
-
-	@Override
-	public Record selectByPrimaryKey(Integer id) {
-		try {
-			Method selectByPrimaryKey = mapper.getClass().getDeclaredMethod("selectByPrimaryKey", id.getClass());
-			Object result = selectByPrimaryKey.invoke(mapper, id);
-			return (Record) result;
+			return (List<Record>)mapper.getClass()
+					.getDeclaredMethod("selectByExample", example.getClass())
+					.invoke(mapper, example);
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
@@ -180,122 +135,320 @@ public class BaseServiceImpl<Mapper, Record extends BaseEntity, Example extends 
 	 * @return
 	 */
 	@Override
-	public Record selectByPrimaryKeyWithCatch(Integer id) {
+	@SuppressWarnings("unchecked")
+	public Record selectByPrimaryKey(Integer id) {
+		Assert.notNull(id, "条件对象为空");
 		try {
-			Method selectByPrimaryKey = mapper.getClass().getDeclaredMethod("selectByPrimaryKey", id.getClass());
-			Object result = selectByPrimaryKey.invoke(mapper, id);
-			return (Record) result;
+			return (Record)mapper.getClass()
+					.getDeclaredMethod("selectByPrimaryKey", id.getClass())
+					.invoke(mapper, id);
 		} catch (Exception e) {
-			logger.error("id_"+ id+"_"+e.getMessage(), e);
+			throw new DAOException(e);
+		}
+	}
+
+	/**
+	 * 根据条件更新有效字段
+	 *
+	 * @param record
+	 * @param example
+	 * @return
+	 */
+	@Override
+	public int updateByExampleSelective(Record record, Example example) {
+		Assert.notNull(record, "对象为空");
+		try {
+			return (int)mapper.getClass()
+					.getDeclaredMethod("updateByExampleSelective", record.getClass(), example.getClass())
+					.invoke(mapper, record, example);
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	/**
+	 * 根据条件更新记录
+	 *
+	 * @param record
+	 * @param example
+	 * @return
+	 */
+	@Override
+	public int updateByExample(@Param("record") Record record, @Param("example") Example example) {
+		Assert.notNull(record, "对象为空");
+		try {
+			return (int)mapper.getClass()
+					.getDeclaredMethod("updateByExample", record.getClass(), example.getClass())
+					.invoke(mapper, record, example);
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	/**
+	 * 根据主键更新记录有效字段
+	 *
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public int updateByPrimaryKeySelective(Record record) {
+		Assert.notNull(record, "对象为空");
+		try {
+			return (int)mapper.getClass()
+					.getDeclaredMethod("updateByPrimaryKeySelective", record.getClass())
+					.invoke(mapper, record);
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	/**
+	 * 根据主键更新记录
+	 *
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public int updateByPrimaryKey(Record record) {
+		Assert.notNull(record, "对象为空");
+		try {
+			return (int)mapper.getClass()
+					.getDeclaredMethod("updateByPrimaryKey", record.getClass())
+					.invoke(mapper, record);
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	/**
+	 * 根据主键删除记录
+	 *
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public boolean deleteByPrimaryKeyWithCatch(Integer id) {
+		Assert.notNull(id, "条件对象为空");
+		try {
+			if ((int)mapper.getClass()
+					.getDeclaredMethod("deleteByPrimaryKey", id.getClass())
+					.invoke(mapper, id) == 1) {
+				return true;
+			}
+		} catch (Exception e) {
+			log.error(id + "_" + e.getMessage(), e);
+		}
+		return false;
+	}
+
+	/**
+	 * 插入记录
+	 *
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public boolean insertWithCatch(Record record) {
+		Assert.notNull(record, "对象为空");
+		try {
+			if ((int)mapper.getClass()
+					.getDeclaredMethod("insert", record.getClass())
+					.invoke(mapper, record) == 1) {
+				return true;
+			}
+		} catch (Exception e) {
+			log.error(record.toString() + "_" + e.getMessage(), e);
+		}
+		return false;
+	}
+
+	/**
+	 * 插入记录有效字段
+	 *
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public boolean insertSelectiveWithCatch(Record record) {
+		Assert.notNull(record, "对象为空");
+		try {
+			if ((int)mapper.getClass()
+					.getDeclaredMethod("insertSelective", record.getClass())
+					.invoke(mapper, record) == 1) {
+				return true;
+			}
+		} catch (Exception e) {
+			log.error(record.toString() + "_" + e.getMessage(), e);
+		}
+		return false;
+	}
+
+	/**
+	 * 根据条件查询记录
+	 *
+	 * @param example
+	 * @return
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Record> selectByExampleWithCatch(Example example) {
+		Assert.notNull(example, "条件对象为空");
+		try {
+			return (List<Record>)mapper.getClass()
+					.getDeclaredMethod("selectByExample", example.getClass())
+					.invoke(mapper, example);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 		}
 		return null;
 	}
 
+	/**
+	 * 根据主键查询记录
+	 *
+	 * @param id
+	 * @return
+	 */
 	@Override
-	public int updateByPrimaryKeyAndVersion(Record record, Class<Example> exampleClass) {
-		if (record.getId() == null) {
-			throw new DAOException("缺少id");
-		}
-		if (record.getVersion() == null) {
-			throw new DAOException("缺少版本信息");
-		}
-		record.setLastUpdateDatetime(new Date());
-		Example example = null;
+	@SuppressWarnings("unchecked")
+	public Record selectByPrimaryKeyWithCatch(Integer id) {
+		Assert.notNull(id, "条件对象为空");
 		try {
-			example = exampleClass.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new DAOException("实例化查询对象失败",  e);
+			return (Record)mapper.getClass()
+					.getDeclaredMethod("selectByPrimaryKey", id.getClass())
+					.invoke(mapper, id);
+		} catch (Exception e) {
+			log.error(id + "_" + e.getMessage(), e);
 		}
-		BaseGeneratedCriteria baseGeneratedCriteria = example.createCriteria();
-		baseGeneratedCriteria.andIdEqualTo(record.getId());
-		baseGeneratedCriteria.andVersionEqualTo(record.getVersion());
-		record.setVersion(record.getVersion()+1);
-		int result = updateByExampleSelective(record, example);
-		if (result == 0) {
-			throw new LockException("version or id err");
-		}
-		return result;
+		return null;
 	}
 
+	/**
+	 * 根据主键更新记录有效字段
+	 *
+	 * @param record
+	 * @return
+	 */
 	@Override
-	public int updateByExampleSelective(@Param("record") Record record, @Param("example") Example example) {
-		record.setLastUpdateDatetime(new Date());
+	public boolean updateByPrimaryKeySelectiveWithCatch(Record record) {
+		Assert.notNull(record, "对象为空");
 		try {
-			Method updateByExampleSelective = mapper.getClass().getDeclaredMethod("updateByExampleSelective", record.getClass(), example.getClass());
-			Object result = updateByExampleSelective.invoke(mapper, record, example);
-			return (int)result;
+			if ((int)mapper.getClass()
+					.getDeclaredMethod("updateByPrimaryKeySelective", record.getClass())
+					.invoke(mapper, record) == 1) {
+				return true;
+			}
+		} catch (Exception e) {
+			log.error(record.toString() + "_" + e.getMessage(), e);
+		}
+		return false;
+	}
+
+	/**
+	 * 根据主键更新记录
+	 *
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public boolean updateByPrimaryKeyWithCatch(Record record) {
+		Assert.notNull(record, "对象为空");
+		try {
+			if ((int)mapper.getClass()
+					.getDeclaredMethod("updateByPrimaryKey", record.getClass())
+					.invoke(mapper, record) == 1) {
+				return true;
+			}
+		} catch (Exception e) {
+			log.error(record.toString() + "_" + e.getMessage(), e);
+		}
+		return false;
+	}
+
+	/**
+	 * 根据条件查询记录，附带BLOB字段
+	 *
+	 * @param exampleClass Example的class对象
+	 * @return
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Record> listAll(Class<Example> exampleClass) {
+		Assert.notNull(exampleClass, "对象为空");
+		try {
+			return (List<Record>) mapper.getClass()
+					.getDeclaredMethod("selectByExample", exampleClass)
+					.invoke(mapper, new Object[]{null});
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
 	}
 
+	/**
+	 * 根据条件查询第一条记录
+	 *
+	 * @param example
+	 * @return
+	 */
 	@Override
-	public int updateByExampleWithBLOBs(@Param("record") Record record, @Param("example") Example example) {
-		record.setLastUpdateDatetime(new Date());
+	@SuppressWarnings("unchecked")
+	public Record selectFirstByExample(Example example) {
+		Assert.notNull(example, "条件对象为空");
 		try {
-			Method updateByExampleWithBLOBs = mapper.getClass().getDeclaredMethod("updateByExampleWithBLOBs", record.getClass(), example.getClass());
-			Object result = updateByExampleWithBLOBs.invoke(mapper, record, example);
-			return (int)result;
+			List<Record> result = (List<Record>)mapper.getClass()
+					.getDeclaredMethod("selectByExample", example.getClass())
+					.invoke(mapper, example);
+			if (null != result && result.size() > 0) {
+				return result.get(0);
+			}
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
+		return null;
 	}
 
+	/**
+	 * 根据条件查询记录，附带BLOB字段
+	 *
+	 * @param exampleClass Example的class对象
+	 * @return
+	 */
 	@Override
-	public int updateByExample(@Param("record") Record record, @Param("example") Example example) {
-		record.setLastUpdateDatetime(new Date());
+	@SuppressWarnings("unchecked")
+	public List<Record> listAllWithCatch(Class<Example> exampleClass) {
+		Assert.notNull(exampleClass, "条件对象为空");
 		try {
-			Method updateByExample = mapper.getClass().getDeclaredMethod("updateByExample", record.getClass(), example.getClass());
-			Object result = updateByExample.invoke(mapper, record, example);
-			return (int)result;
+			return (List<Record>) mapper.getClass()
+					.getDeclaredMethod("selectByExample", exampleClass)
+					.invoke(mapper, new Object[]{null});
 		} catch (Exception e) {
-			throw new DAOException(e);
+			log.error(e.getMessage(), e);
 		}
+		return null;
 	}
 
+	/**
+	 * 根据条件查询第一条记录
+	 *
+	 * @param example
+	 * @return
+	 */
 	@Override
-	public int updateByPrimaryKeySelective(Record record) {
-		if (record.getId() == null) {
-			throw new DAOException("缺少id");
-		}
-		record.setLastUpdateDatetime(new Date());
+	@SuppressWarnings("unchecked")
+	public Record selectFirstByExampleWithCatch(Example example) {
+		Assert.notNull(example, "条件对象为空");
 		try {
-			Method updateByPrimaryKeySelective = mapper.getClass().getDeclaredMethod("updateByPrimaryKeySelective", record.getClass());
-			Object result = updateByPrimaryKeySelective.invoke(mapper, record);
-			return (int)result;
+			List<Record> result = (List<Record>)mapper.getClass()
+					.getDeclaredMethod("selectByExample", example.getClass())
+					.invoke(mapper, example);
+			if (null != result && result.size() > 0) {
+				return result.get(0);
+			}
 		} catch (Exception e) {
-			throw new DAOException(e);
+			log.error(e.getMessage(), e);
 		}
-	}
-
-	@Override
-	public int updateByPrimaryKeyWithBLOBs(Record record) {
-		if (record.getId() == null) {
-			throw new DAOException("缺少id");
-		}
-		record.setLastUpdateDatetime(new Date());
-		try {
-			Method updateByPrimaryKeyWithBLOBs = mapper.getClass().getDeclaredMethod("updateByPrimaryKeyWithBLOBs", record.getClass());
-			Object result = updateByPrimaryKeyWithBLOBs.invoke(mapper, record);
-			return (int)result;
-		} catch (Exception e) {
-			throw new DAOException(e);
-		}
-	}
-
-	@Override
-	public int updateByPrimaryKey(Record record) {
-		if (record.getId() == null) {
-			throw new DAOException("缺少id");
-		}
-		record.setLastUpdateDatetime(new Date());
-		try {
-			Method updateByPrimaryKey = mapper.getClass().getDeclaredMethod("updateByPrimaryKey", record.getClass());
-			Object result = updateByPrimaryKey.invoke(mapper, record);
-			return (int)result;
-		} catch (Exception e) {
-			throw new DAOException(e);
-		}
+		return null;
 	}
 
 }

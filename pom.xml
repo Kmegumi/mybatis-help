@@ -41,6 +41,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.22</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.25</version>
@@ -66,46 +72,33 @@
         </dependency>
     </dependencies>
 
-    <!--<distributionManagement>
+
+    <distributionManagement>
         <repository>
-            &lt;!&ndash; 这里的ID要和setting的id一致 &ndash;&gt;
-            <id>maven-repository-releases</id>
-            <url>http://10.10.1.197:12121/repository/ky/</url>
+            <!-- 这里的ID要和setting的id一致 -->
+            <id>private-releases</id>
+            <url>http://nmbxmm.shands.cn/repository/maven-releases/</url>
         </repository>
-        &lt;!&ndash;这是打成快照版本的配置，如果不用这个snapshotRepository标签，打包失败，会报权限问题 &ndash;&gt;
+        <!--这是打成快照版本的配置，如果不用这个snapshotRepository标签，打包失败，会报权限问题 -->
         <snapshotRepository>
-            <id>maven-repository-snapshots</id>
-            <url>http://10.10.1.197:12121/repository/ky_snapshot/</url>
+            <id>private-snapshots</id>
+            <url>http://nmbxmm.shands.cn/repository/maven-snapshots/</url>
         </snapshotRepository>
-    </distributionManagement>-->
+    </distributionManagement>
 
     <repositories>
-        <!--&lt;!&ndash;中央代理库&ndash;&gt;
         <repository>
-            <id>maven-repository-central</id>
-            <name>central repository</name>
-            <url>http://10.10.1.197:12121/repository/maven-central/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
+            <id>private-releases</id>
+            <name>private releases</name>
+            <url>http://nmbxmm.shands.cn/repository/maven-releases/</url>
         </repository>
-        &lt;!&ndash;二方库&ndash;&gt;
         <repository>
-            <id>maven-repository-releases</id>
-            <name>2nd repository</name>
-            <url>http://10.10.1.197:12121/repository/ky/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        &lt;!&ndash;二方库快照&ndash;&gt;
-        <repository>
-            <id>maven-repository-releases-snapshot</id>
-            <name>2nd repository snapshot</name>
-            <url>http://10.10.1.197:12121/repository/ky_snapshot/</url>
+            <id>private-snapshots</id>
+            <name>private Snapshots</name>
+            <url>http://nmbxmm.shands.cn/repository/maven-snapshots/</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>-->
+        </repository>
     </repositories>
 </project>

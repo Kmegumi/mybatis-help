@@ -9,7 +9,7 @@ import java.util.List;
  * @author megumi
  * @date 2018/06/06.
  */
-public interface BaseService<Record extends BaseEntity, Example extends BaseExample> {
+public interface BaseService<Record, Example> {
 
     /**
      * 根据条件查询记录数量
@@ -40,6 +40,66 @@ public interface BaseService<Record extends BaseEntity, Example extends BaseExam
     int insert(Record record);
 
     /**
+     * 插入记录有效字段
+     * @param record
+     * @return
+     */
+    int insertSelective(Record record);
+
+    /**
+     * 根据条件查询记录
+     * @param example
+     * @return
+     */
+    List<Record> selectByExample(Example example);
+
+    /**
+     * 根据主键查询记录
+     * @param id
+     * @return
+     */
+    Record selectByPrimaryKey(Integer id);
+
+    /**
+     * 根据条件更新有效字段
+     * @param record
+     * @param example
+     * @return
+     */
+    int updateByExampleSelective(@Param("record") Record record, @Param("example") Example example);
+
+    /**
+     * 根据条件更新记录
+     * @param record
+     * @param example
+     * @return
+     */
+    int updateByExample(@Param("record") Record record, @Param("example") Example example);
+
+
+    /**
+     * 根据主键更新记录有效字段
+     * @param record
+     * @return
+     */
+    int updateByPrimaryKeySelective(Record record);
+
+
+    /**
+     * 根据主键更新记录
+     * @param record
+     * @return
+     */
+    int updateByPrimaryKey(Record record);
+
+    /**
+     * 根据主键删除记录
+     * @param id
+     * @return
+     */
+    boolean deleteByPrimaryKeyWithCatch(Integer id);
+
+    /**
      * 插入记录
      * @param record
      * @return
@@ -51,42 +111,14 @@ public interface BaseService<Record extends BaseEntity, Example extends BaseExam
      * @param record
      * @return
      */
-    int insertSelective(Record record);
-
-    /**
-     * 根据条件查询记录，附带BLOB字段
-     * @param example
-     * @return
-     */
-    List<Record> selectByExampleWithBLOBs(Example example);
+    boolean insertSelectiveWithCatch(Record record);
 
     /**
      * 根据条件查询记录
      * @param example
      * @return
      */
-    List<Record> selectByExample(Example example);
-
-    /**
-     * 根据条件查询第一条记录
-     * @param example
-     * @return
-     */
-    Record selectFirstByExample(Example example);
-
-    /**
-     * 根据条件查询第一条记录，附带BLOB字段
-     * @param example
-     * @return
-     */
-    Record selectFirstByExampleWithBLOBs(Example example);
-
-    /**
-     * 根据主键查询记录
-     * @param id
-     * @return
-     */
-    Record selectByPrimaryKey(Integer id);
+    List<Record> selectByExampleWithCatch(Example example);
 
     /**
      * 根据主键查询记录
@@ -96,54 +128,47 @@ public interface BaseService<Record extends BaseEntity, Example extends BaseExam
     Record selectByPrimaryKeyWithCatch(Integer id);
 
     /**
-     *
-     * */
-    int updateByPrimaryKeyAndVersion(@Param("record") Record record, Class<Example> exampleClass);
-
-    /**
-     * 根据条件更新有效字段
-     * @param record
-     * @param example
-     * @return
-     */
-    int updateByExampleSelective(@Param("record") Record record, @Param("example") Example example);
-
-    /**
-     * 根据条件更新记录有效字段，附带BLOB字段
-     * @param record
-     * @param example
-     * @return
-     */
-    int updateByExampleWithBLOBs(@Param("record") Record record, @Param("example") Example example);
-
-    /**
-     * 根据条件更新记录
-     * @param record
-     * @param example
-     * @return
-     */
-    int updateByExample(@Param("record") Record record, @Param("example") Example example);
-
-    /**
      * 根据主键更新记录有效字段
      * @param record
      * @return
      */
-    int updateByPrimaryKeySelective(Record record);
-
-    /**
-     * 根据主键更新记录，附带BLOB字段
-     * @param record
-     * @return
-     */
-    int updateByPrimaryKeyWithBLOBs(Record record);
+    boolean updateByPrimaryKeySelectiveWithCatch(Record record);
 
     /**
      * 根据主键更新记录
      * @param record
      * @return
      */
-    int updateByPrimaryKey(Record record);
+    boolean updateByPrimaryKeyWithCatch(Record record);
 
+
+    /**
+     * 根据条件查询记录，附带BLOB字段
+     * @param exampleClass Example的class对象
+     * @return
+     */
+    List<Record> listAll(Class<Example> exampleClass);
+
+    /**
+     * 根据条件查询第一条记录
+     * @param example
+     * @return
+     */
+    Record selectFirstByExample(Example example);
+
+
+    /**
+     * 根据条件查询记录，附带BLOB字段
+     * @param exampleClass Example的class对象
+     * @return
+     */
+    List<Record> listAllWithCatch(Class<Example> exampleClass);
+
+    /**
+     * 根据条件查询第一条记录
+     * @param example
+     * @return
+     */
+    Record selectFirstByExampleWithCatch(Example example);
 
 }
