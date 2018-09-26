@@ -3,12 +3,16 @@ package com.megumi.core.utils;
 import com.megumi.core.exception.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.util.StringUtils;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * JDK8时间操作新类
@@ -29,6 +33,8 @@ public class DateUtils {
     private final static DateTimeFormatter ORDER_FORMAT = DateTimeFormatter.ofPattern("yyMMdd");
 
     private final static DateTimeFormatter FORMAT_DAY = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+    private final static Map<String, DateTimeFormatter> formatterMap = new ConcurrentHashMap<>(16);
 
     private DateUtils(){
 
@@ -57,7 +63,6 @@ public class DateUtils {
     public static String getFormatDay(LocalDate localDate) {
         return FORMAT_DAY.format(localDate);
     }
-
 
 
     /**
@@ -95,6 +100,17 @@ public class DateUtils {
         return null;
     }
 
+    /**
+     * @param localDateTime 根据需求调整的时间点
+     * @return 根据localDateTime格式化成系统默认时区yyyy-MM-dd HH:mm:ss 的字符串
+     * */
+    public static String formatDate(LocalDateTime localDateTime){
+        if (localDateTime != null) {
+            return FORMAT_ONE.format(localDateTime);
+        }
+        return null;
+    }
+
    /**
      * @param instant 根据需求调整的时间点
      * @return 根据instant格式化成系统默认时区yyyy-MM-dd HH:mm:ss 的字符串
@@ -118,7 +134,6 @@ public class DateUtils {
         }
         return null;
     }
-
 
 
     /**
@@ -297,7 +312,17 @@ public class DateUtils {
      * @return 根据text字符串生成的本地时间对象
      * */
     public static LocalDateTime parseDate(CharSequence text, String pattern){
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
+        if (StringUtils.isEmpty(pattern) || text == null) {
+            return null;
+        }
+        DateTimeFormatter dateTimeFormatter = null;
+        if ((dateTimeFormatter = formatterMap.get(pattern)) == null) {
+            DateTimeFormatter newDateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
+            dateTimeFormatter = formatterMap.putIfAbsent(pattern, newDateTimeFormatter);
+            if (dateTimeFormatter == null) {
+                dateTimeFormatter = newDateTimeFormatter;
+            }
+        }
         TemporalAccessor temporalAccessor;
         try {
             temporalAccessor = dateTimeFormatter.parse(text);
@@ -306,6 +331,19 @@ public class DateUtils {
             return null;
         }
         return LocalDateTime.from(temporalAccessor);
+    }
+
+
+    /**
+     * 旧时间对象转换为新的localDatetime对象
+     * @param date 旧时间对象
+     * @return jdk8 的localDateTime对象
+     */
+    public static LocalDateTime getLocalDateTimeByDate(Date date) {
+        if (date == null) {
+            return null;
+        }
+        return getLocalDateTimeFromInstant(date.toInstant());
     }
 
 

@@ -6,7 +6,7 @@ import com.megumi.core.utils.BaseServiceUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 实现BaseService类
@@ -160,7 +160,7 @@ public class BaseServiceForBaseEntityImpl<Mapper, Record extends BaseEntity, Exa
 		if (record.getVersion() == null) {
 			throw new DAOException("缺少版本信息");
 		}
-		record.setLastUpdateDatetime(new Date());
+		record.setLastUpdateDatetime(LocalDateTime.now());
 		Example example = null;
 		try {
 			example = exampleClass.newInstance();

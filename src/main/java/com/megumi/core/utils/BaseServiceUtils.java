@@ -3,6 +3,7 @@ package com.megumi.core.utils;
 import com.megumi.core.base.BaseEntity;
 import org.springframework.util.Assert;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -16,14 +17,14 @@ public class BaseServiceUtils {
         Assert.notNull(t, "对象为空");
         t.setId(null);
         t.setVersion(0);
-        Date now = new Date();
+        LocalDateTime now = LocalDateTime.now();
         t.setCreateDatetime(now);
         t.setLastUpdateDatetime(now);
     }
 
     public static <T extends BaseEntity> void initUpdate(T t) {
         Assert.notNull(t, "对象为空");
-        t.setLastUpdateDatetime(new Date());
+        t.setLastUpdateDatetime(LocalDateTime.now());
     }
 
 }
