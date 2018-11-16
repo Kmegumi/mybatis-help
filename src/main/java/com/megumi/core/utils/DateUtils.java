@@ -49,6 +49,26 @@ public class DateUtils {
     /****↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓格式化时间字符串方法↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓***/
 
     /**
+     * @param localDateTime 根据需求调整的时间点
+     * @param pattern 合法的时间格式
+     * @return 将instant格式化成系统默认时区 pattern 格式 的字符串
+     * */
+    public static String formatDateOfPattern(LocalDateTime localDateTime, String pattern){
+        if (StringUtils.isEmpty(pattern) || localDateTime == null) {
+            return null;
+        }
+        DateTimeFormatter dateTimeFormatter = null;
+        if ((dateTimeFormatter = formatterMap.get(pattern)) == null) {
+            DateTimeFormatter newDateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
+            dateTimeFormatter = formatterMap.putIfAbsent(pattern, newDateTimeFormatter);
+            if (dateTimeFormatter == null) {
+                dateTimeFormatter = newDateTimeFormatter;
+            }
+        }
+        return dateTimeFormatter.format(localDateTime);
+    }
+
+    /**
      * 获取今天的时间
      * @return
      * */
