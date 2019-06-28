@@ -77,6 +77,44 @@ public class BaseServiceImpl<Mapper, Record, Example> implements BaseService<Rec
 	 * 插入记录
 	 *
 	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public int insert(Record record, Class<Record> recordClass) {
+		Assert.notNull(record, "对象为空");
+		try {
+			return (int)mapper.getClass()
+					.getDeclaredMethod("insert", recordClass)
+					.invoke(mapper, record);
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	/**
+	 * 插入记录有效字段
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public int insertSelective(Record record, Class<Record> recordClass) {
+		Assert.notNull(record, "对象为空");
+		try {
+			return (int)mapper.getClass()
+					.getDeclaredMethod("insertSelective", recordClass)
+					.invoke(mapper, record);
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	/**
+	 * 插入记录
+	 *
+	 * @param record
 	 * @return
 	 */
 	@Override
@@ -186,6 +224,46 @@ public class BaseServiceImpl<Mapper, Record, Example> implements BaseService<Rec
 	}
 
 	/**
+	 * 根据条件更新有效字段
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @param example
+	 * @return
+	 */
+	@Override
+	public int updateByExampleSelective(Record record, Class<Record> recordClass, Example example) {
+		Assert.notNull(record, "对象为空");
+		try {
+			return (int)mapper.getClass()
+					.getDeclaredMethod("updateByExampleSelective", recordClass, example.getClass())
+					.invoke(mapper, record, example);
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	/**
+	 * 根据条件更新记录
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @param example
+	 * @return
+	 */
+	@Override
+	public int updateByExample(Record record, Class<Record> recordClass, Example example) {
+		Assert.notNull(record, "对象为空");
+		try {
+			return (int)mapper.getClass()
+					.getDeclaredMethod("updateByExample", recordClass, example.getClass())
+					.invoke(mapper, record, example);
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	/**
 	 * 根据主键更新记录有效字段
 	 *
 	 * @param record
@@ -215,6 +293,44 @@ public class BaseServiceImpl<Mapper, Record, Example> implements BaseService<Rec
 		try {
 			return (int)mapper.getClass()
 					.getDeclaredMethod("updateByPrimaryKey", record.getClass())
+					.invoke(mapper, record);
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	/**
+	 * 根据主键更新记录有效字段
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public int updateByPrimaryKeySelective(Record record, Class<Record> recordClass) {
+		Assert.notNull(record, "对象为空");
+		try {
+			return (int)mapper.getClass()
+					.getDeclaredMethod("updateByPrimaryKeySelective", recordClass)
+					.invoke(mapper, record);
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	/**
+	 * 根据主键更新记录
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public int updateByPrimaryKey(Record record, Class<Record> recordClass) {
+		Assert.notNull(record, "对象为空");
+		try {
+			return (int)mapper.getClass()
+					.getDeclaredMethod("updateByPrimaryKey", recordClass)
 					.invoke(mapper, record);
 		} catch (Exception e) {
 			throw new DAOException(e);
@@ -275,6 +391,50 @@ public class BaseServiceImpl<Mapper, Record, Example> implements BaseService<Rec
 		try {
 			if ((int)mapper.getClass()
 					.getDeclaredMethod("insertSelective", record.getClass())
+					.invoke(mapper, record) == 1) {
+				return true;
+			}
+		} catch (Exception e) {
+			log.error(record.toString() + "_" + e.getMessage(), e);
+		}
+		return false;
+	}
+
+	/**
+	 * 插入记录
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public boolean insertWithCatch(Record record, Class<Record> recordClass) {
+		Assert.notNull(record, "对象为空");
+		try {
+			if ((int)mapper.getClass()
+					.getDeclaredMethod("insert", recordClass)
+					.invoke(mapper, record) == 1) {
+				return true;
+			}
+		} catch (Exception e) {
+			log.error(record.toString() + "_" + e.getMessage(), e);
+		}
+		return false;
+	}
+
+	/**
+	 * 插入记录有效字段
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public boolean insertSelectiveWithCatch(Record record, Class<Record> recordClass) {
+		Assert.notNull(record, "对象为空");
+		try {
+			if ((int)mapper.getClass()
+					.getDeclaredMethod("insertSelective", recordClass)
 					.invoke(mapper, record) == 1) {
 				return true;
 			}
@@ -357,6 +517,50 @@ public class BaseServiceImpl<Mapper, Record, Example> implements BaseService<Rec
 		try {
 			if ((int)mapper.getClass()
 					.getDeclaredMethod("updateByPrimaryKey", record.getClass())
+					.invoke(mapper, record) == 1) {
+				return true;
+			}
+		} catch (Exception e) {
+			log.error(record.toString() + "_" + e.getMessage(), e);
+		}
+		return false;
+	}
+
+	/**
+	 * 根据主键更新记录有效字段
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public boolean updateByPrimaryKeySelectiveWithCatch(Record record, Class<Record> recordClass) {
+		Assert.notNull(record, "对象为空");
+		try {
+			if ((int)mapper.getClass()
+					.getDeclaredMethod("updateByPrimaryKeySelective", recordClass)
+					.invoke(mapper, record) == 1) {
+				return true;
+			}
+		} catch (Exception e) {
+			log.error(record.toString() + "_" + e.getMessage(), e);
+		}
+		return false;
+	}
+
+	/**
+	 * 根据主键更新记录
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public boolean updateByPrimaryKeyWithCatch(Record record, Class<Record> recordClass) {
+		Assert.notNull(record, "对象为空");
+		try {
+			if ((int)mapper.getClass()
+					.getDeclaredMethod("updateByPrimaryKey", recordClass)
 					.invoke(mapper, record) == 1) {
 				return true;
 			}

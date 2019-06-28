@@ -18,6 +18,165 @@ public class BaseServiceForBaseEntityWithBLOBsImpl<Mapper, Record extends BaseEn
 
 
     /**
+     * 插入记录
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public int insert(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        BaseServiceUtils.initInsert(recordWithBlobs);
+        return super.insert(recordWithBlobs, recordClass);
+    }
+
+    /**
+     * 插入记录有效字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public int insertSelective(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        BaseServiceUtils.initInsert(recordWithBlobs);
+        return super.insertSelective(recordWithBlobs, recordClass);
+    }
+
+    /**
+     * 根据条件更新有效字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @param example
+     * @return
+     */
+    @Override
+    public int updateByExampleSelective(RecordWithBlobs recordWithBlobs, Class<Record> recordClass, Example example) {
+        BaseServiceUtils.initInsert(recordWithBlobs);
+        return super.updateByExampleSelective(recordWithBlobs, recordClass, example);
+    }
+
+    /**
+     * 根据条件更新记录有效字段，附带BLOB字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @param example
+     * @return
+     */
+    @Override
+    public int updateByExampleWithBLOBs(RecordWithBlobs recordWithBlobs, Class<Record> recordClass, Example example) {
+        BaseServiceUtils.initInsert(recordWithBlobs);
+        return super.updateByExampleWithBLOBs(recordWithBlobs, recordClass, example);
+    }
+
+    /**
+     * 根据条件更新记录
+     *
+     * @param record
+     * @param recordClass
+     * @param example
+     * @return
+     */
+    @Override
+    public int updateByExample(Record record, Class<Record> recordClass, Example example) {
+        BaseServiceUtils.initInsert(record);
+        return super.updateByExample(record, recordClass, example);
+    }
+
+    /**
+     * 根据主键更新记录有效字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public int updateByPrimaryKeySelective(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        BaseServiceUtils.initInsert(recordWithBlobs);
+        return super.updateByPrimaryKeySelective(recordWithBlobs, recordClass);
+    }
+
+    /**
+     * 根据主键更新记录，附带BLOB字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public int updateByPrimaryKeyWithBLOBs(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        BaseServiceUtils.initInsert(recordWithBlobs);
+        return super.updateByPrimaryKeyWithBLOBs(recordWithBlobs, recordClass);
+    }
+
+    /**
+     * 根据主键更新记录
+     *
+     * @param record
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public int updateByPrimaryKey(Record record, Class<Record> recordClass) {
+        BaseServiceUtils.initInsert(record);
+        return super.updateByPrimaryKey(record, recordClass);
+    }
+
+    /**
+     * 插入记录
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public boolean insertWithCatch(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        BaseServiceUtils.initInsert(recordWithBlobs);
+        return super.insertWithCatch(recordWithBlobs, recordClass);
+    }
+
+    /**
+     * 插入记录有效字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public boolean insertSelectiveWithCatch(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        BaseServiceUtils.initInsert(recordWithBlobs);
+        return super.insertSelectiveWithCatch(recordWithBlobs, recordClass);
+    }
+
+    /**
+     * 根据主键更新记录有效字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public boolean updateByPrimaryKeySelectiveWithCatch(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        BaseServiceUtils.initInsert(recordWithBlobs);
+        return super.updateByPrimaryKeySelectiveWithCatch(recordWithBlobs, recordClass);
+    }
+
+    /**
+     * 根据主键更新记录，附带BLOB字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public boolean updateByPrimaryKeyWithBLOBsWithCatch(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        BaseServiceUtils.initInsert(recordWithBlobs);
+        return super.updateByPrimaryKeyWithBLOBsWithCatch(recordWithBlobs, recordClass);
+    }
+
+    /**
      * 根据版本号修改对象
      *
      * @param recordWithBlobs
@@ -91,6 +250,51 @@ public class BaseServiceForBaseEntityWithBLOBsImpl<Mapper, Record extends BaseEn
         try {
             result = (int)mapper.getClass()
                     .getDeclaredMethod("updateByExampleSelective", recordWithBlobs.getClass(), example.getClass())
+                    .invoke(mapper, recordWithBlobs, example);
+        } catch (Exception e){
+            log.error(recordWithBlobs.toString() + "_" + e.getMessage(), e);
+            return false;
+        }
+        if (result == 0) {
+            throw new LockException("version or id err");
+        }
+        return true;
+    }
+
+    /**
+     * 根据版本号修改对象
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @param exampleClass
+     */
+    @Override
+    public boolean updateByPrimaryKeyAndVersion(RecordWithBlobs recordWithBlobs, Class<Record> recordClass, Class<Example> exampleClass) {
+        Assert.notNull(recordWithBlobs, "对象为空");
+        if (recordWithBlobs.getId() == null) {
+            log.error(recordWithBlobs.getClass().getName() + "_缺少id");
+            return false;
+        }
+        if (recordWithBlobs.getVersion() == null) {
+            log.error(recordWithBlobs.getClass().getName() + "_缺少版本信息");
+            return false;
+        }
+        recordWithBlobs.setLastUpdateDatetime(LocalDateTime.now());
+        Example example = null;
+        try {
+            example = exampleClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            log.error("实例化查询对象失败_" + e.getMessage(), e);
+            return false;
+        }
+        BaseGeneratedCriteria baseGeneratedCriteria = example.createCriteria();
+        baseGeneratedCriteria.andIdEqualTo(recordWithBlobs.getId());
+        baseGeneratedCriteria.andVersionEqualTo(recordWithBlobs.getVersion());
+        recordWithBlobs.setVersion(recordWithBlobs.getVersion()+1);
+        int result;
+        try {
+            result = (int)mapper.getClass()
+                    .getDeclaredMethod("updateByExampleSelective", recordClass, example.getClass())
                     .invoke(mapper, recordWithBlobs, example);
         } catch (Exception e){
             log.error(recordWithBlobs.toString() + "_" + e.getMessage(), e);

@@ -27,5 +27,13 @@ public interface BaseServiceForBaseEntityWithBLOBs<Record extends BaseEntity, Re
      * */
     boolean updateByPrimaryKeyAndVersionWithCatch(RecordWithBlobs recordWithBlobs, Class<Example> exampleClass);
 
+    /**
+     * 根据版本号修改对象
+     * @param recordWithBlobs
+     * @param recordClass
+     * @param exampleClass
+     * */
+    boolean updateByPrimaryKeyAndVersion(RecordWithBlobs recordWithBlobs, Class<Record> recordClass, Class<Example> exampleClass);
+
 
 }

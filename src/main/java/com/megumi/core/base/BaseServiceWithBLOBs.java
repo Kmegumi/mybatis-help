@@ -39,6 +39,20 @@ public interface BaseServiceWithBLOBs<Record, RecordWithBlobs extends Record, Ex
      * @param recordWithBlobs
      * @return
      */
+    int insert(RecordWithBlobs recordWithBlobs, Class<Record> recordClass);
+
+    /**
+     * 插入记录有效字段
+     * @param recordWithBlobs
+     * @return
+     */
+    int insertSelective(RecordWithBlobs recordWithBlobs, Class<Record> recordClass);
+
+    /**
+     * 插入记录
+     * @param recordWithBlobs
+     * @return
+     */
     int insert(RecordWithBlobs recordWithBlobs);
 
     /**
@@ -68,6 +82,51 @@ public interface BaseServiceWithBLOBs<Record, RecordWithBlobs extends Record, Ex
      * @return
      */
     RecordWithBlobs selectByPrimaryKey(Integer id);
+
+    /**
+     * 根据条件更新有效字段
+     * @param recordWithBlobs
+     * @param example
+     * @return
+     */
+    int updateByExampleSelective(@Param("record") RecordWithBlobs recordWithBlobs, Class<Record> recordClass, @Param("example") Example example);
+
+    /**
+     * 根据条件更新记录有效字段，附带BLOB字段
+     * @param recordWithBlobs
+     * @param example
+     * @return
+     */
+    int updateByExampleWithBLOBs(@Param("record") RecordWithBlobs recordWithBlobs, Class<Record> recordClass, @Param("example") Example example);
+
+    /**
+     * 根据条件更新记录
+     * @param record
+     * @param example
+     * @return
+     */
+    int updateByExample(@Param("record") Record record, Class<Record> recordClass, @Param("example") Example example);
+
+    /**
+     * 根据主键更新记录有效字段
+     * @param recordWithBlobs
+     * @return
+     */
+    int updateByPrimaryKeySelective(RecordWithBlobs recordWithBlobs, Class<Record> recordClass);
+
+    /**
+     * 根据主键更新记录，附带BLOB字段
+     * @param recordWithBlobs
+     * @return
+     */
+    int updateByPrimaryKeyWithBLOBs(RecordWithBlobs recordWithBlobs, Class<Record> recordClass);
+
+    /**
+     * 根据主键更新记录
+     * @param record
+     * @return
+     */
+    int updateByPrimaryKey(Record record, Class<Record> recordClass);
 
     /**
      * 根据条件更新有效字段
@@ -130,6 +189,20 @@ public interface BaseServiceWithBLOBs<Record, RecordWithBlobs extends Record, Ex
      * @param recordWithBlobs
      * @return
      */
+    boolean insertWithCatch(RecordWithBlobs recordWithBlobs, Class<Record> recordClass);
+
+    /**
+     * 插入记录有效字段
+     * @param recordWithBlobs
+     * @return
+     */
+    boolean insertSelectiveWithCatch(RecordWithBlobs recordWithBlobs, Class<Record> recordClass);
+
+    /**
+     * 插入记录
+     * @param recordWithBlobs
+     * @return
+     */
     boolean insertWithCatch(RecordWithBlobs recordWithBlobs);
 
     /**
@@ -138,6 +211,7 @@ public interface BaseServiceWithBLOBs<Record, RecordWithBlobs extends Record, Ex
      * @return
      */
     boolean insertSelectiveWithCatch(RecordWithBlobs recordWithBlobs);
+
 
     /**
      * 根据条件查询记录
@@ -159,6 +233,20 @@ public interface BaseServiceWithBLOBs<Record, RecordWithBlobs extends Record, Ex
      * @return
      */
     RecordWithBlobs selectByPrimaryKeyWithCatch(Integer id);
+
+    /**
+     * 根据主键更新记录有效字段
+     * @param recordWithBlobs
+     * @return
+     */
+    boolean updateByPrimaryKeySelectiveWithCatch(RecordWithBlobs recordWithBlobs, Class<Record> recordClass);
+
+    /**
+     * 根据主键更新记录，附带BLOB字段
+     * @param recordWithBlobs
+     * @return
+     */
+    boolean updateByPrimaryKeyWithBLOBsWithCatch(RecordWithBlobs recordWithBlobs, Class<Record> recordClass);
 
     /**
      * 根据主键更新记录有效字段

@@ -78,6 +78,44 @@ public class BaseServiceWithBLOBsImpl<Mapper, Record, RecordWithBlobs extends Re
      * 插入记录
      *
      * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public int insert(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        Assert.notNull(recordWithBlobs, "对象为空");
+        try {
+            return (int)mapper.getClass()
+                    .getDeclaredMethod("insert", recordClass)
+                    .invoke(mapper, recordWithBlobs);
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
+    /**
+     * 插入记录有效字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public int insertSelective(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        Assert.notNull(recordWithBlobs, "对象为空");
+        try {
+            return (int)mapper.getClass()
+                    .getDeclaredMethod("insertSelective", recordClass)
+                    .invoke(mapper, recordWithBlobs);
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
+    /**
+     * 插入记录
+     *
+     * @param recordWithBlobs
      * @return
      */
     @Override
@@ -162,6 +200,123 @@ public class BaseServiceWithBLOBsImpl<Mapper, Record, RecordWithBlobs extends Re
             return (RecordWithBlobs)mapper.getClass()
                     .getDeclaredMethod("selectByPrimaryKey", id.getClass())
                     .invoke(mapper, id);
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
+    /**
+     * 根据条件更新有效字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @param example
+     * @return
+     */
+    @Override
+    public int updateByExampleSelective(RecordWithBlobs recordWithBlobs, Class<Record> recordClass, Example example) {
+        Assert.notNull(recordWithBlobs, "对象为空");
+        try {
+            return (int)mapper.getClass()
+                    .getDeclaredMethod("updateByExampleSelective", recordClass, example.getClass())
+                    .invoke(mapper, recordWithBlobs, example);
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
+    /**
+     * 根据条件更新记录有效字段，附带BLOB字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @param example
+     * @return
+     */
+    @Override
+    public int updateByExampleWithBLOBs(RecordWithBlobs recordWithBlobs, Class<Record> recordClass, Example example) {
+        Assert.notNull(recordWithBlobs, "对象为空");
+        try {
+            return (int)mapper.getClass()
+                    .getDeclaredMethod("updateByExampleWithBLOBs", recordClass, example.getClass())
+                    .invoke(mapper, recordWithBlobs, example);
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
+    /**
+     * 根据条件更新记录
+     *
+     * @param record
+     * @param recordClass
+     * @param example
+     * @return
+     */
+    @Override
+    public int updateByExample(Record record, Class<Record> recordClass, Example example) {
+        Assert.notNull(record, "对象为空");
+        try {
+            return (int)mapper.getClass()
+                    .getDeclaredMethod("updateByExample", recordClass, example.getClass())
+                    .invoke(mapper, record, example);
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
+    /**
+     * 根据主键更新记录有效字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public int updateByPrimaryKeySelective(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        Assert.notNull(recordWithBlobs, "对象为空");
+        try {
+            return (int)mapper.getClass()
+                    .getDeclaredMethod("updateByPrimaryKeySelective", recordClass)
+                    .invoke(mapper, recordWithBlobs);
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
+    /**
+     * 根据主键更新记录，附带BLOB字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public int updateByPrimaryKeyWithBLOBs(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        Assert.notNull(recordWithBlobs, "对象为空");
+        try {
+            return (int)mapper.getClass()
+                    .getDeclaredMethod("updateByPrimaryKeyWithBLOBs", recordClass)
+                    .invoke(mapper, recordWithBlobs);
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
+    /**
+     * 根据主键更新记录
+     *
+     * @param record
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public int updateByPrimaryKey(Record record, Class<Record> recordClass) {
+        Assert.notNull(record, "对象为空");
+        try {
+            return (int)mapper.getClass()
+                    .getDeclaredMethod("updateByPrimaryKey", recordClass)
+                    .invoke(mapper, record);
         } catch (Exception e) {
             throw new DAOException(e);
         }
@@ -303,6 +458,50 @@ public class BaseServiceWithBLOBsImpl<Mapper, Record, RecordWithBlobs extends Re
      * 插入记录
      *
      * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public boolean insertWithCatch(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        Assert.notNull(recordWithBlobs, "对象为空");
+        try {
+            if ((int)mapper.getClass()
+                    .getDeclaredMethod("insert", recordClass)
+                    .invoke(mapper, recordWithBlobs) == 1) {
+                return true;
+            }
+        } catch (Exception e) {
+            log.error(recordWithBlobs.toString() + "_" + e.getMessage(), e);
+        }
+        return false;
+    }
+
+    /**
+     * 插入记录有效字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public boolean insertSelectiveWithCatch(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        Assert.notNull(recordWithBlobs, "对象为空");
+        try {
+            if ((int)mapper.getClass()
+                    .getDeclaredMethod("insertSelective", recordClass)
+                    .invoke(mapper, recordWithBlobs) == 1) {
+                return true;
+            }
+        } catch (Exception e) {
+            log.error(recordWithBlobs.toString() + "_" + e.getMessage(), e);
+        }
+        return false;
+    }
+
+    /**
+     * 插入记录
+     *
+     * @param recordWithBlobs
      * @return
      */
     @Override
@@ -399,6 +598,50 @@ public class BaseServiceWithBLOBsImpl<Mapper, Record, RecordWithBlobs extends Re
             log.error(id + "_" + e.getMessage(), e);
         }
         return null;
+    }
+
+    /**
+     * 根据主键更新记录有效字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public boolean updateByPrimaryKeySelectiveWithCatch(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        Assert.notNull(recordWithBlobs, "对象为空");
+        try {
+            if ((int)mapper.getClass()
+                    .getDeclaredMethod("updateByPrimaryKeySelective", recordClass)
+                    .invoke(mapper, recordWithBlobs) == 1) {
+                return true;
+            }
+        } catch (Exception e) {
+            log.error(recordWithBlobs.toString() + "_" + e.getMessage(), e);
+        }
+        return false;
+    }
+
+    /**
+     * 根据主键更新记录，附带BLOB字段
+     *
+     * @param recordWithBlobs
+     * @param recordClass
+     * @return
+     */
+    @Override
+    public boolean updateByPrimaryKeyWithBLOBsWithCatch(RecordWithBlobs recordWithBlobs, Class<Record> recordClass) {
+        Assert.notNull(recordWithBlobs, "对象为空");
+        try {
+            if ((int)mapper.getClass()
+                    .getDeclaredMethod("updateByPrimaryKeyWithBLOBs", recordClass)
+                    .invoke(mapper, recordWithBlobs) == 1) {
+                return true;
+            }
+        } catch (Exception e) {
+            log.error(recordWithBlobs.toString() + "_" + e.getMessage(), e);
+        }
+        return false;
     }
 
     /**

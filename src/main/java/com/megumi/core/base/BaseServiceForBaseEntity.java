@@ -15,4 +15,14 @@ public interface BaseServiceForBaseEntity<Record extends BaseEntity, Example ext
      * @return
      */
     boolean updateByPrimaryKeyAndVersion(Record record, Class<Example> exampleClass);
+
+    /**
+     * 根据版本号修改对象
+     * @param record
+     * @param recordClass
+     * @param exampleClass
+     * @return
+     */
+    boolean updateByPrimaryKeyAndVersion(Record record, Class<Record> recordClass, Class<Example> exampleClass);
+
 }

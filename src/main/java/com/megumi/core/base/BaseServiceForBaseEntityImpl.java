@@ -32,6 +32,138 @@ public class BaseServiceForBaseEntityImpl<Mapper, Record extends BaseEntity, Exa
 	 * 插入记录
 	 *
 	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public int insert(Record record, Class<Record> recordClass) {
+		BaseServiceUtils.initInsert(record);
+		return super.insert(record, recordClass);
+	}
+
+	/**
+	 * 插入记录有效字段
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public int insertSelective(Record record, Class<Record> recordClass) {
+		BaseServiceUtils.initInsert(record);
+		return super.insertSelective(record, recordClass);
+	}
+
+	/**
+	 * 根据条件更新有效字段
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @param example
+	 * @return
+	 */
+	@Override
+	public int updateByExampleSelective(Record record, Class<Record> recordClass, Example example) {
+		BaseServiceUtils.initInsert(record);
+		return super.updateByExampleSelective(record, recordClass, example);
+	}
+
+	/**
+	 * 根据条件更新记录
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @param example
+	 * @return
+	 */
+	@Override
+	public int updateByExample(Record record, Class<Record> recordClass, Example example) {
+		BaseServiceUtils.initInsert(record);
+		return super.updateByExample(record, recordClass, example);
+	}
+
+	/**
+	 * 根据主键更新记录有效字段
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public int updateByPrimaryKeySelective(Record record, Class<Record> recordClass) {
+		BaseServiceUtils.initInsert(record);
+		return super.updateByPrimaryKeySelective(record, recordClass);
+	}
+
+	/**
+	 * 根据主键更新记录
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public int updateByPrimaryKey(Record record, Class<Record> recordClass) {
+		BaseServiceUtils.initInsert(record);
+		return super.updateByPrimaryKey(record, recordClass);
+	}
+
+	/**
+	 * 插入记录
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public boolean insertWithCatch(Record record, Class<Record> recordClass) {
+		BaseServiceUtils.initInsert(record);
+		return super.insertWithCatch(record, recordClass);
+	}
+
+	/**
+	 * 插入记录有效字段
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public boolean insertSelectiveWithCatch(Record record, Class<Record> recordClass) {
+		BaseServiceUtils.initInsert(record);
+		return super.insertSelectiveWithCatch(record, recordClass);
+	}
+
+	/**
+	 * 根据主键更新记录有效字段
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public boolean updateByPrimaryKeySelectiveWithCatch(Record record, Class<Record> recordClass) {
+		BaseServiceUtils.initInsert(record);
+		return super.updateByPrimaryKeySelectiveWithCatch(record, recordClass);
+	}
+
+	/**
+	 * 根据主键更新记录
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @return
+	 */
+	@Override
+	public boolean updateByPrimaryKeyWithCatch(Record record, Class<Record> recordClass) {
+		BaseServiceUtils.initInsert(record);
+		return super.updateByPrimaryKeyWithCatch(record, recordClass);
+	}
+
+	/**
+	 * 插入记录
+	 *
+	 * @param record
 	 * @return
 	 */
 	@Override
@@ -185,4 +317,49 @@ public class BaseServiceForBaseEntityImpl<Mapper, Record extends BaseEntity, Exa
 		}
 		return true;
 	}
+
+
+	/**
+	 * 根据版本号修改对象
+	 *
+	 * @param record
+	 * @param recordClass
+	 * @param exampleClass
+	 * @return
+	 */
+	@Override
+	public boolean updateByPrimaryKeyAndVersion(Record record, Class<Record> recordClass, Class<Example> exampleClass) {
+		Assert.notNull(record, "对象为空");
+		if (record.getId() == null) {
+			throw new DAOException("缺少id");
+		}
+		if (record.getVersion() == null) {
+			throw new DAOException("缺少版本信息");
+		}
+		record.setLastUpdateDatetime(LocalDateTime.now());
+		Example example = null;
+		try {
+			example = exampleClass.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new DAOException("实例化查询对象失败",  e);
+		}
+		BaseGeneratedCriteria baseGeneratedCriteria = example.createCriteria();
+		baseGeneratedCriteria.andIdEqualTo(record.getId());
+		baseGeneratedCriteria.andVersionEqualTo(record.getVersion());
+		record.setVersion(record.getVersion()+1);
+		int result;
+		try {
+			result = (int)mapper.getClass()
+					.getDeclaredMethod("updateByExampleSelective", recordClass, example.getClass())
+					.invoke(mapper, record, example);
+		} catch (Exception e){
+			log.error(record.toString() + "_" + e.getMessage(), e);
+			return false;
+		}
+		if (result == 0) {
+			throw new LockException("version or id err");
+		}
+		return true;
+	}
+
 }

@@ -74,19 +74,36 @@
 
 
     <distributionManagement>
-        <repository>
-            <!-- 这里的ID要和setting的id一致 -->
+        <!--<repository>
+            &lt;!&ndash; 这里的ID要和setting的id一致 &ndash;&gt;
             <id>private-releases</id>
             <url>http://nmbxmm.shands.cn/repository/maven-releases/</url>
         </repository>
-        <!--这是打成快照版本的配置，如果不用这个snapshotRepository标签，打包失败，会报权限问题 -->
+        &lt;!&ndash;这是打成快照版本的配置，如果不用这个snapshotRepository标签，打包失败，会报权限问题 &ndash;&gt;
         <snapshotRepository>
             <id>private-snapshots</id>
             <url>http://nmbxmm.shands.cn/repository/maven-snapshots/</url>
-        </snapshotRepository>
+        </snapshotRepository>-->
+        <repository>
+            <id>shands-mixed</id>
+            <name>shands-mixed Repository</name>
+            <url>http://10.10.1.202:8081/repository/shands-mixed/</url>
+        </repository>
     </distributionManagement>
 
     <repositories>
+        <repository>
+            <id>shands-mixed</id>
+            <name>shands-mixed Repository</name>
+            <url>http://10.10.1.202:8081/repository/shands-mixed/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
         <repository>
             <id>private-releases</id>
             <name>private releases</name>

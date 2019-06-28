@@ -37,6 +37,20 @@ public interface BaseService<Record, Example> {
      * @param record
      * @return
      */
+    int insert(Record record, Class<Record> recordClass);
+
+    /**
+     * 插入记录有效字段
+     * @param record
+     * @return
+     */
+    int insertSelective(Record record, Class<Record> recordClass);
+
+    /**
+     * 插入记录
+     * @param record
+     * @return
+     */
     int insert(Record record);
 
     /**
@@ -76,6 +90,22 @@ public interface BaseService<Record, Example> {
      */
     int updateByExample(@Param("record") Record record, @Param("example") Example example);
 
+    /**
+     * 根据条件更新有效字段
+     * @param record
+     * @param example
+     * @return
+     */
+    int updateByExampleSelective(@Param("record") Record record, Class<Record> recordClass, @Param("example") Example example);
+
+    /**
+     * 根据条件更新记录
+     * @param record
+     * @param example
+     * @return
+     */
+    int updateByExample(@Param("record") Record record, Class<Record> recordClass, @Param("example") Example example);
+
 
     /**
      * 根据主键更新记录有效字段
@@ -91,6 +121,21 @@ public interface BaseService<Record, Example> {
      * @return
      */
     int updateByPrimaryKey(Record record);
+
+    /**
+     * 根据主键更新记录有效字段
+     * @param record
+     * @return
+     */
+    int updateByPrimaryKeySelective(Record record, Class<Record> recordClass);
+
+
+    /**
+     * 根据主键更新记录
+     * @param record
+     * @return
+     */
+    int updateByPrimaryKey(Record record, Class<Record> recordClass);
 
     /**
      * 根据主键删除记录
@@ -112,6 +157,20 @@ public interface BaseService<Record, Example> {
      * @return
      */
     boolean insertSelectiveWithCatch(Record record);
+
+    /**
+     * 插入记录
+     * @param record
+     * @return
+     */
+    boolean insertWithCatch(Record record, Class<Record> recordClass);
+
+    /**
+     * 插入记录有效字段
+     * @param record
+     * @return
+     */
+    boolean insertSelectiveWithCatch(Record record, Class<Record> recordClass);
 
     /**
      * 根据条件查询记录
@@ -140,6 +199,20 @@ public interface BaseService<Record, Example> {
      * @return
      */
     boolean updateByPrimaryKeyWithCatch(Record record);
+
+    /**
+     * 根据主键更新记录有效字段
+     * @param record
+     * @return
+     */
+    boolean updateByPrimaryKeySelectiveWithCatch(Record record, Class<Record> recordClass);
+
+    /**
+     * 根据主键更新记录
+     * @param record
+     * @return
+     */
+    boolean updateByPrimaryKeyWithCatch(Record record, Class<Record> recordClass);
 
 
     /**
