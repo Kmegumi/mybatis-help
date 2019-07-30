@@ -186,6 +186,13 @@ public class DateUtils {
         return null;
     }
 
+    public static String getDayString(LocalDateTime dateTime){
+        if(dateTime != null) {
+            return FORMAT_TWO.format(dateTime);
+        }
+        return "";
+    }
+
 
 
     /**
