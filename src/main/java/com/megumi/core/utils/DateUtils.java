@@ -787,6 +787,34 @@ public class DateUtils {
     }
 
 
+    /**
+     * 计算相差的天数
+     *
+     * @param startDay
+     * @param endDay
+     * @param isIncludeStartDay
+     * @return
+     */
+    public static long getDifferenceDayCount(LocalDate startDay, LocalDate endDay, boolean isIncludeStartDay) {
+        long dayCount = Math.abs(startDay.toEpochDay() - endDay.toEpochDay());
+        if (isIncludeStartDay) {
+            return dayCount + 1;
+        }
+        return dayCount;
+    }
+
+    /**
+     * 计算相差的天数
+     *
+     * @param startDay
+     * @param endDay
+     * @param isIncludeStartDay
+     * @return
+     */
+    public static long getDifferenceDayCount(LocalDateTime startDay, LocalDateTime endDay, boolean isIncludeStartDay) {
+        return getDifferenceDayCount(startDay.toLocalDate(), endDay.toLocalDate(), isIncludeStartDay);
+    }
+
 
     /**********************************************Date保留 使用********************************************************/
 
@@ -885,6 +913,7 @@ public class DateUtils {
     public static Date getDateByYearAndMonth(int year, int month) {
         return Date.from(getInstantByYearAndMonth(year, month));
     }
+
 
 
 
