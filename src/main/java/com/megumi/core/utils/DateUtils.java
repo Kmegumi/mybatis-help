@@ -287,7 +287,7 @@ public class DateUtils {
         }
         LocalDateTime localDateTime = parseDate(text);
         if (localDateTime != null) {
-            localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+            return localDateTime.atZone(ZoneId.systemDefault()).toInstant();
         }
         return null;
     }
