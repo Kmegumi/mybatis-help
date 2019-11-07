@@ -186,7 +186,23 @@ public class DateUtils {
         return null;
     }
 
+    /**
+     * @param dateTime 需要格式化的时间
+     * @return 系统当前时间格式化成系统默认时区yyyy-MM-dd的字符串
+     */
     public static String getDayString(LocalDateTime dateTime){
+        if(dateTime != null) {
+            return FORMAT_TWO.format(dateTime);
+        }
+        return "";
+    }
+
+
+    /**
+     * @param dateTime 需要格式化的时间
+     * @return 系统当前时间格式化成系统默认时区yyyy-MM-dd的字符串
+     */
+    public static String getDayString(LocalDate dateTime){
         if(dateTime != null) {
             return FORMAT_TWO.format(dateTime);
         }
