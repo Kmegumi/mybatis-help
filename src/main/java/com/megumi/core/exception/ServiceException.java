@@ -38,4 +38,18 @@ public class ServiceException extends RuntimeException  {
     public void setObject(Object object) {
         this.object = object;
     }
+
+    /**
+     * Returns the detail message string of this throwable.
+     *
+     * @return the detail message string of this {@code Throwable} instance
+     * (which may be {@code null}).
+     */
+    @Override
+    public String getMessage() {
+        if (object == null) {
+            return super.getMessage();
+        }
+        return object.toString() + "->" + super.getMessage();
+    }
 }
